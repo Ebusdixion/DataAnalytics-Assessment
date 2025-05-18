@@ -20,7 +20,8 @@ WITH monthly_transaction AS (
         COUNT(*) AS monthly_txn_count
     FROM users_customuser AS us
     LEFT JOIN savings_savingsaccount AS ssa
-    ON us.id = ssa.owner_id
+        ON us.id = ssa.owner_id
+    WHERE ssa.confirmed_amount > 0
     GROUP BY us.id, DATE_FORMAT(ssa.transaction_date, '%Y-%m')
 ),
 avg_txn_per_customer AS (
