@@ -1,9 +1,21 @@
--- QUESTION 2
+/*-- QUESTION 2
+-- Transaction Frequency Analysis
+-- Scenario: The finance team wants to analyze how often customers transact to segment them (e.g., frequent vs. occasional users).
+-- Task: Calculate the average number of transactions per customer per month and categorize them:
+-- ●	"High Frequency" (≥10 transactions/month)
+-- ●	"Medium Frequency" (3-9 transactions/month)
+-- ●	"Low Frequency" (≤2 transactions/month)
+-- Tables:
+-- ●	users_customuser
+-- ●	savings_savingsaccount
+*/
+
+
 
 
 WITH monthly_transaction AS (
     SELECT
-        us.id,
+        us.id,                                                       -- Using CTE to get the count of each transaction done per month
         DATE_FORMAT(ssa.transaction_date, '%Y-%m') AS txn_month,
         COUNT(*) AS monthly_txn_count
     FROM users_customuser AS us
@@ -13,7 +25,7 @@ WITH monthly_transaction AS (
 ),
 avg_txn_per_customer AS (
     SELECT id,
-        AVG(monthly_txn_count) AS avg_transactions_per_month
+        AVG(monthly_txn_count) AS avg_transactions_per_month           -- Using CTE to get the average done per month
     FROM monthly_transaction
     GROUP BY id
 )
@@ -24,7 +36,7 @@ frequency_category,
 FROM (
     SELECT
         id,
-        avg_transactions_per_month,
+        avg_transactions_per_month,                                     -- Using subquery to get the frequency of the transaction based on the average transaction per month
         CASE
             WHEN avg_transactions_per_month >= 10 THEN 'High Frequency'
             WHEN avg_transactions_per_month BETWEEN 3 AND 9 THEN 'Medium Frequency'
